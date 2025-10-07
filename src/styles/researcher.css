@@ -1,0 +1,144 @@
+/* Base styles */
+body, html, #root {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: #0f172a; /* dark base to match navbar */
+  color: #e2e8f0; /* soft text for dark bg */
+}
+
+.researcher-page {
+  max-width: 1200px;
+  margin: 24px auto 80px;
+  padding: 0 18px;
+}
+
+.researcher-page h2 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #38bdf8; /* accent blue like navbar */
+}
+
+/* Card container - default mobile/tablet swipeable */
+.card-container {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 10px;
+}
+
+/* Card styles */
+.card {
+  background: #1e293b; /* dark card bg */
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25); /* stronger shadow for dark bg */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  scroll-snap-align: start;
+  flex: 0 0 80%; /* default width for mobile swipe */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 18px 32px rgba(0,0,0,0.35);
+  background: #1f2937;
+}
+
+/* Card header */
+.card-head {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(56,189,248,0.4); /* bright accent border */
+}
+
+.card-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.field {
+  color: #94a3b8; /* softer text */
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* Summary */
+.summary {
+  color: #cbd5e1;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Why attend */
+.why-attend h4 {
+  margin: 10px 0 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #38bdf8; /* accent blue */
+}
+.why-attend ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.why-attend li {
+  margin-bottom: 6px;
+  font-size: 0.92rem;
+  color: #94a3b8;
+}
+
+/* Footer */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.92rem;
+  color: #94a3b8;
+  margin-top: 10px;
+}
+
+/* Tablet: swipeable with 60% width per card */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .card {
+    flex: 0 0 45%; /* two cards partially visible */
+  }
+}
+
+/* Desktop: 4 cards in a row using grid */
+@media (min-width: 1100px) {
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    overflow-x: visible;
+  }
+  .card {
+    flex: unset;
+    width: auto;
+  }
+}
+
+/* Scrollbar hide */
+.card-container::-webkit-scrollbar {
+  display: none;
+}
+.card-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
