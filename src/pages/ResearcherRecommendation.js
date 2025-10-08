@@ -175,7 +175,6 @@ export default function ResearcherRecommendation() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Step 1: Get the logged-in user
     const getUser = async () => {
       const { data, error } = await supabase.auth.getUser();
       if (error) {
@@ -195,7 +194,6 @@ export default function ResearcherRecommendation() {
     getUser();
   }, []);
 
-  // Step 2: Fetch all recommendation columns
   const fetchRecommendations = async (userId) => {
     const { data, error } = await supabase
       .from("questionnaire_responses")
@@ -213,7 +211,6 @@ export default function ResearcherRecommendation() {
 
     const parseJSON = (value) => {
       if (!value) return [];
-      // FIX: Check if already an array
       if (Array.isArray(value)) return value;
       try {
         return typeof value === "string" ? JSON.parse(value) : value;
@@ -234,9 +231,7 @@ export default function ResearcherRecommendation() {
   if (loading) return <p className="loading">Loading recommendations...</p>;
   if (!user) return <p>Please log in to view your recommendations.</p>;
 
-  // Step 3: Reusable card rendering function - FIX HERE
   const renderCards = (title, items) => {
-    // FIX: Ensure items is always an array before using .map
     const itemsArray = Array.isArray(items) ? items : [];
     
     return (
@@ -304,7 +299,6 @@ export default function ResearcherRecommendation() {
     );
   };
 
-  // Step 4: Render all four sections
   return (
     <div className="researcher-page">
       {renderCards("Mutual Recommendations", mutualItems)}
