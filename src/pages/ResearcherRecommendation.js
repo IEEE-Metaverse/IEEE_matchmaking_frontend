@@ -190,16 +190,13 @@ export default function ResearcherRecommendation() {
         setLoading(false);
       }
     };
-
     getUser();
   }, []);
 
   const fetchRecommendations = async (userId) => {
     const { data, error } = await supabase
       .from("questionnaire_responses")
-      .select(
-        "mutual_recommendation, Chatgpt_recommendation, anthropic_recommendation, lama_recommendation"
-      )
+      .select("mutual_recommendation, Chatgpt_recommendation, anthropic_recommendation, lama_recommendation")
       .eq("user_id", userId)
       .single();
 
@@ -213,9 +210,10 @@ export default function ResearcherRecommendation() {
       if (!value) return [];
       if (Array.isArray(value)) return value;
       try {
-        return typeof value === "string" ? JSON.parse(value) : value;
+        const parsed = typeof value === "string" ? JSON.parse(value) : value;
+        return Array.isArray(parsed) ? parsed : [];
       } catch (err) {
-        console.error("Error parsing JSON:", err, value);
+        console.error("Error parsing JSON:", err);
         return [];
       }
     };
@@ -224,33 +222,24 @@ export default function ResearcherRecommendation() {
     setChatgptItems(parseJSON(data.Chatgpt_recommendation));
     setAnthropicItems(parseJSON(data.anthropic_recommendation));
     setLamaItems(parseJSON(data.lama_recommendation));
-
     setLoading(false);
   };
 
-  if (loading) return <p className="loading">Loading recommendations...</p>;
-  if (!user) return <p>Please log in to view your recommendations.</p>;
-
   const renderCards = (title, items) => {
-    const itemsArray = Array.isArray(items) ? items : [];
-    
+    const safeItems = Array.isArray(items) ? items : [];
     return (
       <div className="recommendation-section">
         <h2>{title}</h2>
-        {itemsArray.length === 0 ? (
+        {safeItems.length === 0 ? (
           <p>No recommendations found for this section.</p>
         ) : (
           <div className="card-container">
-            {itemsArray.map((item, idx) => (
+            {safeItems.map((item, idx) => (
               <article className="card" key={item.id || idx}>
                 <div className="card-head">
                   <img
                     className="avatar"
-                    src={
-                      item.photo && item.photo !== "not found"
-                        ? item.photo
-                        : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
-                    }
+                    src={item.photo && item.photo !== "not found" ? item.photo : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"}
                     alt={item.name || "Researcher"}
                   />
                   <div className="card-info">
@@ -258,9 +247,7 @@ export default function ResearcherRecommendation() {
                     <div className="field">{item.field}</div>
                   </div>
                 </div>
-
                 <p className="summary">{item.summary}</p>
-
                 {item.why && item.why.length > 0 && (
                   <div className="why-attend">
                     <h4>Why to meet?</h4>
@@ -271,19 +258,11 @@ export default function ResearcherRecommendation() {
                     </ul>
                   </div>
                 )}
-
                 <div className="card-footer">
                   <span>
                     Email:{" "}
                     {item.Email ? (
-                      
-                        href={`mailto:${item.Email}`}
-                        style={{
-                          fontWeight: "bold",
-                          textDecoration: "none",
-                          color: "#e2e8f0",
-                        }}
-                      >
+                      <a href={`mailto:${item.Email}`} style={{ fontWeight: "bold", textDecoration: "none", color: "#e2e8f0" }}>
                         {item.Email}
                       </a>
                     ) : (
@@ -298,6 +277,9 @@ export default function ResearcherRecommendation() {
       </div>
     );
   };
+
+  if (loading) return <p className="loading">Loading recommendations...</p>;
+  if (!user) return <p>Please log in to view your recommendations.</p>;
 
   return (
     <div className="researcher-page">
