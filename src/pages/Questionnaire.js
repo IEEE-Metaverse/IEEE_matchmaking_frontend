@@ -228,7 +228,7 @@ export default function Questionnaire() {
 
       // Send POST request
       const accessToken = sessionData.session?.access_token;
-      const res = await fetch("http://localhost:5000/api/questionnaire/save", {
+      const res = await fetch("https://ieeematchmakingbackend-production.up.railway.app/api/questionnaire/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
