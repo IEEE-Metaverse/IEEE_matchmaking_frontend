@@ -235,7 +235,7 @@ export default function ResearcherRecommendation() {
                 <p className="summary">{item.summary}</p>
                 {item.why && item.why.length > 0 && (
                   <div className="why-attend">
-                    <h4>Why to meet?</h4>
+                    <h4>Why meet?</h4>
                     <ul>
                       {item.why.map((w, i) => (
                         <li key={i}>{w}</li>
