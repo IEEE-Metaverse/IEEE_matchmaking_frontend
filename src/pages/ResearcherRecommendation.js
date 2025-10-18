@@ -232,10 +232,10 @@ export default function ResearcherRecommendation() {
                     <div className="field">{item.field}</div>
                   </div>
                 </div>
-                <p className="summary">{item.summary}</p>
+                <p className="summary" style={{ textAlign: "justify" }}>{item.summary}</p>
                 {item.why && item.why.length > 0 && (
                   <div className="why-attend">
-                    <h4>Why meet?</h4>
+                    <h4>Why to meet?</h4>
                     <ul>
                       {item.why.map((w, i) => (
                         <li key={i}>{w}</li>
@@ -285,9 +285,9 @@ export default function ResearcherRecommendation() {
 
   return (
     <div className="researcher-page">
+      {renderCards("Mutual Recommendations", mutualItems)}
       {renderCards("ChatGPT Recommendations", chatgptItems)}
       {renderCards("Anthropic Recommendations", anthropicItems)}
-      {renderCards("Mutual Recommendations", mutualItems)}
       {renderComingSoon("Llama Recommendations")}
     </div>
   );
