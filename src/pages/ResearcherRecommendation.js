@@ -285,9 +285,9 @@ export default function ResearcherRecommendation() {
 
   return (
     <div className="researcher-page">
-      {renderCards("Mutual Recommendations", mutualItems)}
       {renderCards("ChatGPT Recommendations", chatgptItems)}
       {renderCards("Anthropic Recommendations", anthropicItems)}
+      {renderCards("Mutual Recommendations", mutualItems)}
       {renderComingSoon("Llama Recommendations")}
     </div>
   );
