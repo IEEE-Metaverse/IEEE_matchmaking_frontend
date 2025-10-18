@@ -11,7 +11,6 @@
 //   const [user, setUser] = useState(null);
 
 //   useEffect(() => {
-//     // Step 1: Get the logged-in user
 //     const getUser = async () => {
 //       const { data, error } = await supabase.auth.getUser();
 //       if (error) {
@@ -27,17 +26,13 @@
 //         setLoading(false);
 //       }
 //     };
-
 //     getUser();
 //   }, []);
 
-//   // Step 2: Fetch all recommendation columns
 //   const fetchRecommendations = async (userId) => {
 //     const { data, error } = await supabase
 //       .from("questionnaire_responses")
-//       .select(
-//         "mutual_recommendation, Chatgpt_recommendation, anthropic_recommendation, lama_recommendation"
-//       )
+//       .select("mutual_recommendation, Chatgpt_recommendation, anthropic_recommendation, lama_recommendation")
 //       .eq("user_id", userId)
 //       .single();
 
@@ -49,10 +44,12 @@
 
 //     const parseJSON = (value) => {
 //       if (!value) return [];
+//       if (Array.isArray(value)) return value;
 //       try {
-//         return typeof value === "string" ? JSON.parse(value) : value;
+//         const parsed = typeof value === "string" ? JSON.parse(value) : value;
+//         return Array.isArray(parsed) ? parsed : [];
 //       } catch (err) {
-//         console.error("Error parsing JSON:", err, value);
+//         console.error("Error parsing JSON:", err);
 //         return [];
 //       }
 //     };
@@ -61,79 +58,65 @@
 //     setChatgptItems(parseJSON(data.Chatgpt_recommendation));
 //     setAnthropicItems(parseJSON(data.anthropic_recommendation));
 //     setLamaItems(parseJSON(data.lama_recommendation));
-
 //     setLoading(false);
+//   };
+
+//   const renderCards = (title, items) => {
+//     const safeItems = Array.isArray(items) ? items : [];
+//     return (
+//       <div className="recommendation-section">
+//         <h2>{title}</h2>
+//         {safeItems.length === 0 ? (
+//           <p>No recommendations found for this section.</p>
+//         ) : (
+//           <div className="card-container">
+//             {safeItems.map((item, idx) => (
+//               <article className="card" key={item.id || idx}>
+//                 <div className="card-head">
+//                   <img
+//                     className="avatar"
+//                     src={item.photo && item.photo !== "not found" ? item.photo : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"}
+//                     alt={item.name || "Researcher"}
+//                   />
+//                   <div className="card-info">
+//                     <h3>{item.name}</h3>
+//                     <div className="field">{item.field}</div>
+//                   </div>
+//                 </div>
+//                 <p className="summary">{item.summary}</p>
+//                 {item.why && item.why.length > 0 && (
+//                   <div className="why-attend">
+//                     <h4>Why to meet?</h4>
+//                     <ul>
+//                       {item.why.map((w, i) => (
+//                         <li key={i}>{w}</li>
+//                       ))}
+//                     </ul>
+//                   </div>
+//                 )}
+//                 <div className="card-footer">
+//                   <span>
+//                     Email:{" "}
+//                     {item.Email ? (
+//                       <a href={`mailto:${item.Email}`} style={{ fontWeight: "bold", textDecoration: "none", color: "#e2e8f0" }}>
+//                         {item.Email}
+//                       </a>
+//                     ) : (
+//                       <strong>Email not available</strong>
+//                     )}
+//                   </span>
+//                 </div>
+//               </article>
+//             ))}
+//           </div>
+//         )}
+//       </div>
+//     );
 //   };
 
 //   if (loading) return <p className="loading">Loading recommendations...</p>;
 //   if (!user) return <p>Please log in to view your recommendations.</p>;
 
-//   // Step 3: Reusable card rendering function
-//   const renderCards = (title, items) => (
-//     <div className="recommendation-section">
-//       <h2>{title}</h2>
-//       {items.length === 0 ? (
-//         <p>No recommendations found for this section.</p>
-//       ) : (
-//         <div className="card-container">
-//           {items.map((item, idx) => (
-//             <article className="card" key={item.id || idx}>
-//               <div className="card-head">
-//                 <img
-//                   className="avatar"
-//                   src={
-//                     item.photo && item.photo !== "not found"
-//                       ? item.photo
-//                       : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
-//                   }
-//                   alt={item.name || "Researcher"}
-//                 />
-//                 <div className="card-info">
-//                   <h3>{item.name}</h3>
-//                   <div className="field">{item.field}</div>
-//                 </div>
-//               </div>
-
-//               <p className="summary">{item.summary}</p>
-
-//               {item.why && item.why.length > 0 && (
-//                 <div className="why-attend">
-//                   <h4>Why to meet?</h4>
-//                   <ul>
-//                     {item.why.map((w, i) => (
-//                       <li key={i}>{w}</li>
-//                     ))}
-//                   </ul>
-//                 </div>
-//               )}
-
-//               <div className="card-footer">
-//                 <span>
-//                   Email:{" "}
-//                   {item.Email ? (
-//                     <a
-//                       href={`mailto:${item.Email}`}
-//                       style={{
-//                         fontWeight: "bold",
-//                         textDecoration: "none",
-//                         color: "#e2e8f0",
-//                       }}
-//                     >
-//                       {item.Email}
-//                     </a>
-//                   ) : (
-//                     <strong>Email not available</strong>
-//                   )}
-//                 </span>
-//               </div>
-//             </article>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-
-//   // Step 4: Render all four sections
 //   return (
 //     <div className="researcher-page">
 //       {renderCards("Mutual Recommendations", mutualItems)}
@@ -143,6 +126,8 @@
 //     </div>
 //   );
 // }
+
+
 
 
 
@@ -278,6 +263,23 @@ export default function ResearcherRecommendation() {
     );
   };
 
+  const renderComingSoon = (title) => {
+    return (
+      <div className="recommendation-section">
+        <h2>{title}</h2>
+        <div style={{ 
+          textAlign: "center", 
+          padding: "3rem 1rem", 
+          fontSize: "1.5rem", 
+          color: "#94a3b8",
+          fontWeight: "500"
+        }}>
+          Coming Soon
+        </div>
+      </div>
+    );
+  };
+
   if (loading) return <p className="loading">Loading recommendations...</p>;
   if (!user) return <p>Please log in to view your recommendations.</p>;
 
@@ -286,7 +288,7 @@ export default function ResearcherRecommendation() {
       {renderCards("Mutual Recommendations", mutualItems)}
       {renderCards("ChatGPT Recommendations", chatgptItems)}
       {renderCards("Anthropic Recommendations", anthropicItems)}
-      {renderCards("Llama Recommendations", lamaItems)}
+      {renderComingSoon("Llama Recommendations")}
     </div>
   );
 }
